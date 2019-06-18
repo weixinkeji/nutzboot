@@ -77,6 +77,9 @@ public class NutzBootMVCSIC implements JWPSystemInterfaceConfig {
 		if (null == ok || (forwardUrl = ok.value()).isEmpty()) {
 			return;
 		}
+		if(forwardUrl.startsWith("re:")) {
+			forwardUrl=forwardUrl.substring(3);
+		}
 		// 如果返回的是内部跳转，权限应该跟入口一样
 		if (forwardUrl.startsWith("->:")) {
 			list.add(forwardUrl.substring(3));
@@ -127,7 +130,7 @@ public class NutzBootMVCSIC implements JWPSystemInterfaceConfig {
 	
 	@Override
 	public String[] getRequestUrlSuffix() {
-		return new String[] { ".json", ".xml" };
+		return new String[] { ".nut" };
 	}
 
 //	private String formatUrl(String url) {
