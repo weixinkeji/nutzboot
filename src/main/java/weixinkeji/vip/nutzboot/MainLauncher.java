@@ -4,8 +4,11 @@ import org.nutz.boot.NbApp;
 import org.nutz.ioc.impl.PropertiesProxy;
 import org.nutz.ioc.loader.annotation.*;
 import org.nutz.mvc.annotation.*;
+
+import weixinkeji.vip.jweb.power.ann.JWPCommon;
 import weixinkeji.vip.nutzboot.bean.User;
 import org.nutz.dao.Dao;
+
 
 @IocBean(create="init", depose="depose")
 public class MainLauncher {
@@ -14,6 +17,7 @@ public class MainLauncher {
     protected PropertiesProxy conf;
     @Inject
     protected Dao dao;
+    @JWPCommon
     @At("/")
     @Ok("->:/index.html")
     public void index() {}

@@ -18,11 +18,19 @@ public class TimeModule {
     protected PropertiesProxy conf;
     
     @ApiOperation(value = "获取当前毫秒数", notes = "服务器端的时间", httpMethod="GET", response=Long.class)
-    @At
+//    @At({"now","now1"})
+    @At({"/now","/now1"})
     @Ok("raw")
     public long now() {
         return System.currentTimeMillis();
     }
+    
+    @At({"/forjsp"})
+    @Ok("jsp:/index.jsp")
+    public long now2() {
+        return System.currentTimeMillis();
+    }
+    
     
     public void init() {}
     public void depose() {}

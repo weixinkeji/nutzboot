@@ -17,6 +17,7 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.POST;
 import org.nutz.mvc.annotation.Param;
 
+import weixinkeji.vip.jweb.power.ann.JWPCommon;
 import weixinkeji.vip.nutzboot.bean.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -27,6 +28,7 @@ import io.swagger.annotations.ApiOperation;
 @At("/user")
 @IocBean
 @Ok("json:full")
+@JWPCommon
 public class UserModule {
 
     @Inject
