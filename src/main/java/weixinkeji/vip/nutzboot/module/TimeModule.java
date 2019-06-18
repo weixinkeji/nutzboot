@@ -26,8 +26,9 @@ public class TimeModule {
     }
     
     @At({"/forjsp"})
-    @Ok("jsp:/index.jsp")
-    public long now2() {
+//    @Ok("jsp:/index.jsp")
+    @Ok("jsp:${Object==null?'/index.jsp':'abc'}")
+    public Object now2() {
         return System.currentTimeMillis();
     }
     
