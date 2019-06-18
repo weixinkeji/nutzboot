@@ -12,13 +12,13 @@ import weixinkeji.vip.jweb.power.config.JWPSystemInterfaceConfig;
 /**
  * 示例
  * <p>
- * JWebPower框架 对接SrpingMVC框架 实例类
+ * JWebPower框架 对接nutzboot.mvc框架 实例类
  * </p>
  * 
  * @author wangchunzi
  *
  */
-public class SpringMVCSIC implements JWPSystemInterfaceConfig {
+public class NutzBootMVCSIC implements JWPSystemInterfaceConfig {
 
 	@Override
 	public String getURLByClass(Class<?> c) {
