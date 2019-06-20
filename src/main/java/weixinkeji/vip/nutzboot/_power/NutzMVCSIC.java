@@ -1,12 +1,14 @@
 package weixinkeji.vip.nutzboot._power;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Ok;
 
+import weixinkeji.vip.jweb.power.ann.JWPCode;
 import weixinkeji.vip.jweb.power.config.JWPSystemInterfaceConfig;
 
 /**
@@ -18,10 +20,15 @@ import weixinkeji.vip.jweb.power.config.JWPSystemInterfaceConfig;
  * @author wangchunzi
  *
  */
-public class NutzBootMVCSIC implements JWPSystemInterfaceConfig {
-
+public class NutzMVCSIC implements JWPSystemInterfaceConfig {
+	private Class<?> myC;
 	@Override
 	public String getURLByClass(Class<?> c) {
+		//不考虑抽象类上的注解
+		if(Modifier.isAbstract(c.getModifiers())) {
+			return null;
+		}
+		this.myC=c;
 		At at = c.getAnnotation(At.class);
 		if (null != at) {
 			return at.value().length == 0 ? c.getSimpleName() : at.value()[0];
@@ -29,6 +36,7 @@ public class NutzBootMVCSIC implements JWPSystemInterfaceConfig {
 		return "";
 	}
 
+	//针对 一个方法绑定一个请求路径
 	@Override
 	public String getURLByMethod(Method method) {
 		return null;
@@ -45,7 +53,7 @@ public class NutzBootMVCSIC implements JWPSystemInterfaceConfig {
 	 */
 	@Override
 	public String[] getURLByMethod2(Method method) {
-		At at = method.getAnnotation(At.class);
+		At at = finalAt(method);
 		List<String> list = new ArrayList<>();
 		if (null != at) {
 			if (at.value().length == 0) {
@@ -59,6 +67,33 @@ public class NutzBootMVCSIC implements JWPSystemInterfaceConfig {
 			}
 		}
 		return list.size() > 0 ? list.toArray(new String[list.size()]) : null;
+	}
+	//@At有可能注解在m上，也有可能注解在父类同名方法上。
+	private At finalAt(Method m) {
+		At at = m.getAnnotation(At.class);
+		if(null!=at) {
+			return at;
+		}
+		if(myC.getSuperclass()==Object.class) {
+			System.out.println(myC.getSimpleName()+"="+myC.getSuperclass());
+			return null;
+		}
+		try {
+			Method m2=myC.getSuperclass().getMethod(m.getName(),m.getParameterTypes());
+			if(null!=m2) {
+				System.out.println("权限"+m2.getAnnotation(JWPCode.class));
+				at=m2.getAnnotation(At.class);
+				return at;
+			}
+		} catch (NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public String[] getRequestUrlSuffix() {
+		return new String[] { ".nut" };
 	}
 	
 	// 入口方法 处理后的跳转。理应跟入口的权限一样
@@ -128,10 +163,7 @@ public class NutzBootMVCSIC implements JWPSystemInterfaceConfig {
 	}
 	
 	
-	@Override
-	public String[] getRequestUrlSuffix() {
-		return new String[] { ".nut" };
-	}
+
 
 //	private String formatUrl(String url) {
 //		if (!url.startsWith("/")) {

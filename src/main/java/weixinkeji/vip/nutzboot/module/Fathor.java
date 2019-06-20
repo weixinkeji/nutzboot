@@ -1,5 +1,10 @@
 package weixinkeji.vip.nutzboot.module;
 
-public abstract class Fathor {
+import org.nutz.mvc.annotation.At;
 
+public abstract class Fathor {
+	 @At({"/now","/now1"})
+	public  long now() {
+        return System.currentTimeMillis();
+    }
 }
